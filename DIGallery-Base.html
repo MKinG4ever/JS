@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DIGallery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery 3.7.0 -->
+    <script src="jQuery.min.js"></script>
+    <!-- online jQuery 3.7.0 link -->
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    -->
+    <!-- Script -->
+    <script type="text/javascript" src="#"></script>
+    <!-- StyleSheet-->
+    <link type="text/css" rel="stylesheet" href="#">
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            overflow: auto;
+        }
+
+        #top-navigator {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 100%;
+        }
+
+        #gallery-container {
+            display: flex;
+            height: calc(100% - 50px); /* Adjusted height for the top navigator */
+            width: 100%;
+        }
+
+        #tools {
+            width: 50px;
+            height: 100%;
+            background-color: #f4f4f4;
+            overflow: auto;
+        }
+
+        #navigator {
+            width: 100px;
+            height: 100%;
+            background-color: #fff;
+            overflow: auto;
+        }
+
+        #navigator img {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #image-table {
+            width: calc(100% - 150px);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #image-table img {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        #image-table img.active {
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div id="top-navigator">
+    <h2>Image Tools</h2>
+    <!-- Add more tools or buttons here -->
+</div>
+
+<div id="gallery-container">
+    <div id="tools"></div>
+    <div id="navigator"></div>
+    <div id="image-table"></div>
+</div>
+
+<script>
+    const images = [
+        'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
+        'https://images.pexels.com/photos/5471151/pexels-photo-5471151.jpeg',
+        'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg',
+        'https://images.pexels.com/photos/6308286/pexels-photo-6308286.jpeg',
+        'https://images.pexels.com/photos/6067981/pexels-photo-6067981.jpeg',
+        'https://images.pexels.com/photos/4181802/pexels-photo-4181802.jpeg',
+        'https://images.pexels.com/photos/3983293/pexels-photo-3983293.jpeg',
+        'https://images.pexels.com/photos/4398801/pexels-photo-4398801.jpeg',
+        'https://images.pexels.com/photos/5981207/pexels-photo-5981207.jpeg',
+        'https://images.pexels.com/photos/1234567/pexels-photo-1234567.jpeg',
+        'https://images.pexels.com/photos/2345678/pexels-photo-2345678.jpeg',
+        'https://images.pexels.com/photos/3456789/pexels-photo-3456789.jpeg',
+        'https://images.pexels.com/photos/4567890/pexels-photo-4567890.jpeg',
+        'https://images.pexels.com/photos/5678901/pexels-photo-5678901.jpeg',
+        'https://images.pexels.com/photos/6789012/pexels-photo-6789012.jpeg',
+        'https://images.pexels.com/photos/7890123/pexels-photo-7890123.jpeg',
+        'https://images.pexels.com/photos/8901234/pexels-photo-8901234.jpeg',
+        'https://images.pexels.com/photos/9012345/pexels-photo-9012345.jpeg',
+        'https://images.pexels.com/photos/9123456/pexels-photo-9123456.jpeg',
+        'https://images.pexels.com/photos/12345678/pexels-photo-12345678.jpeg',
+        'https://images.pexels.com/photos/23456789/pexels-photo-23456789.jpeg',
+        'https://images.pexels.com/photos/34567890/pexels-photo-34567890.jpeg',
+        'https://images.pexels.com/photos/45678901/pexels-photo-45678901.jpeg',
+        'https://images.pexels.com/photos/56789012/pexels-photo-56789012.jpeg',
+    ];
+
+    const topNavigator = document.getElementById('top-navigator');
+    const toolsContainer = document.getElementById('tools');
+    const navigator = document.getElementById('navigator');
+    const imageTable = document.getElementById('image-table');
+
+    // Populate the top navigator with tools or buttons
+    // topNavigator.innerHTML = '<h2>Image Tools</h2>'; // Assign new H2
+    // Add more tools or buttons as needed
+
+    // Populate the tools container with additional tools
+    // toolsContainer.innerHTML = '<button onclick="customFunction()">Tool 1</button>';
+    // Add more tools or buttons with corresponding functions as needed
+
+    // Populate the navigator with thumbnail images
+    images.forEach((imageUrl, index) => {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = imageUrl;
+        thumbnail.addEventListener('click', () => showImage(index));
+        navigator.appendChild(thumbnail);
+    });
+
+    // Show the first image on page load
+    showImage(0);
+
+    function showImage(index) {
+        // Remove the 'active' class from all thumbnails
+        Array.from(navigator.children).forEach((child) => {
+            child.classList.remove('active');
+        });
+
+        // Add the 'active' class to the clicked thumbnail
+        navigator.children[index].classList.add('active');
+
+        // Display the selected image in the table viewer
+        imageTable.innerHTML = `<img src="${images[index]}" alt="Image ${index + 1}" class="active">`;
+    }
+
+    // Example function for a custom tool button
+    // function customFunction() {
+    //     // Implement the functionality for the custom tool button
+    // }
+</script>
+
+</body>
+</html>
+
