@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <style>
+        /* Global styles for the entire document */
+        body {
+            font-family: 'Arial', sans-serif; /* Set the default font family */
+            margin: 20px; /* Set margin around the body */
+            padding: 20px; /* Set padding around the body */
+            background-color: #f4f4f4; /* Set a light background color */
+        }
+
+        /* Button styling */
+        button {
+            padding: 10px 15px; /* Set padding for the button */
+            font-size: 16px; /* Set font size for the button text */
+            cursor: pointer; /* Set cursor style to pointer on hover */
+            background-color: #3498db; /* Blue background color */
+            color: #fff; /* White text color */
+            border: none; /* Remove default button border */
+            border-radius: 5px; /* Add rounded corners */
+        }
+
+        /* Container for the file list */
+        #fileList {
+            margin-top: 20px; /* Set top margin for the file list container */
+            padding: 10px; /* Set padding for the file list container */
+            border: 1px solid #ccc; /* Add a border around the container */
+            border-radius: 5px; /* Add rounded corners */
+            background-color: #fff; /* White background color */
+        }
+
+        /* Styling for each file entry in the list */
+        p {
+            margin: 0; /* Remove default margin for paragraphs */
+            padding: 5px 0; /* Set top and bottom padding for each entry */
+            border-bottom: 1px solid #eee; /* Light border between entries */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Button to trigger directory selection -->
+<button id="selectDirectoryButton">Select Directory</button>
+
+<!-- Container to display the list of files -->
+<div id="fileList"></div>
+
+<!-- JavaScript code for handling directory selection -->
+<script>
+    /* Current file URL | window.location.href */
+    let currentURL = window.location.href.split('/').slice(0, -1).join('/');
+
+    /* Current file Path | window.location.pathname */
+    // let currentPath = window.location.pathname.split('/').slice(0, -1).join('/');
+
+    // Event listener for the DOMContentLoaded event
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get references to the button and file list container
+        let selectDirectoryButton = document.getElementById('selectDirectoryButton');
+        let fileListContainer = document.getElementById('fileList');
+
+        // Event listener for the button click event
+        selectDirectoryButton.addEventListener('click', async function () {
+            try {
+                // Show the directory picker dialog
+                const directoryHandle = await window.showDirectoryPicker();
+                fileListContainer.innerHTML = ''; // Clear previous results
+
+                // Iterate over entries in the directory
+                for await (const entry of directoryHandle.values()) {
+                    fileListContainer.innerHTML += `<p>${entry.name}</p>`;
+                    console.log(entry);
+                }
+            } catch (error) {
+                console.error('Error selecting directory:', error);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
