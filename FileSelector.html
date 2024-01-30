@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File|Image Selector</title>
+
+    <!-- Add CSS styles for the page -->
+    <style>
+        /* Set a default font and some basic styling for the body */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        /* Hide the default file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Style for the label that acts as a button to trigger file input */
+        label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Hover effect for the label */
+        label:hover {
+            background-color: #2980b9;
+        }
+
+        /* Hide the file input element itself */
+        #fileInput {
+            display: none;
+        }
+
+        /* Add some margin to the uploaded images for better visibility */
+        img {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Add a label that resembles a button to trigger the file input -->
+<label for="fileInput">Choose Image(s)</label>
+<input type="file" id="fileInput" accept="image/*" multiple/>
+
+<!-- Container to display the uploaded images -->
+<div id="imageContainer"></div>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const files = event.target.files;
+        const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+
+        // Display the selected image files
+        displayImages(imageFiles);
+    });
+
+    function displayImages(images) {
+        const container = document.getElementById('imageContainer');
+        container.innerHTML = ""; // Clear previous images
+
+        // Loop through the selected images and display them
+        images.forEach(image => {
+            const imgElement = document.createElement('img');
+            imgElement.src = URL.createObjectURL(image);
+            container.appendChild(imgElement);
+        });
+    }
+</script>
+</body>
+</html>
