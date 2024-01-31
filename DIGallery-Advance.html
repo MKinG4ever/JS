@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DIGallery</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="MKinG">
+
+    <!-- jQuery 3.7.0 -->
+    <script src="jquery.min.js"></script>
+    <!-- online jQuery 3.7.0 link -->
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    -->
+
+    <!-- Script -->
+    <script type="text/javascript" src="#"></script>
+
+    <!-- StyleSheet-->
+    <link type="text/css" rel="stylesheet" href="#">
+
+    <style>
+
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+        }
+
+        /* Set full width and height for HTML and body */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Allow scrolling in the body */
+        body {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Style for the top navigation bar */
+        #top-navigator {
+            background-color: rgba(45, 45, 45, 1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 100%;
+        }
+
+        /* Style for the main gallery container */
+        #gallery-container {
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            height: calc(100% - 50px); /* Adjusted height for the top navigator */
+            width: 100%;
+        }
+
+        /* Style for the tools section on the left */
+        #tools {
+            width: 50px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        /* Style for the navigator section on the left */
+        #navigator {
+            width: 100px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        /* Style for images inside the navigator */
+        #navigator img {
+            width: 100%;
+            cursor: pointer;
+            border: 2px solid white;
+            border-radius: 2px;
+        }
+
+        /* Style for the main image table on the right */
+        #image-table {
+            width: calc(100% - 150px);
+            height: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+            overflow: hidden;
+            border: 5px solid rgba(0, 0, 0, 0.5);
+        }
+
+        #image-table .image-cell {
+            box-sizing: border-box;
+            width: 50%;
+            height: 50%;
+            border: 5px solid rgba(0, 0, 0, 0.5);
+        }
+
+        /* Style for images inside the main image table */
+        #image-table .image-cell img {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        /* Style for the active image in the main image table */
+        #image-table .image-cell img.active {
+            /* You can add specific styles for the active image if needed */
+        }
+
+
+        /* Custom Scrollbar Example */
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: #555;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #43a047;
+            border-radius: 15px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #057525;
+        }
+
+        @media (max-width: 768px) {
+            #image-table .image-cell {
+                box-sizing: border-box;
+                width: 50%;
+                height: 50%;
+                border: 5px solid rgba(0, 0, 0, 0.5);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id="top-navigator">
+    <h2>DIGallery</h2>
+    <!-- Add more tools or buttons here -->
+</div>
+
+<div id="gallery-container">
+
+    <div id="tools"></div>
+    <div id="navigator"></div>
+
+    <div id="image-table">
+        <!-- Display image-cells side by side -->
+    </div>
+
+</div>
+
+</body>
+
+<script>
+    //image url list
+    const images = [
+        'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
+        'https://images.pexels.com/photos/5471151/pexels-photo-5471151.jpeg',
+        'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg',
+        'https://images.pexels.com/photos/6308286/pexels-photo-6308286.jpeg',
+        'https://images.pexels.com/photos/6067981/pexels-photo-6067981.jpeg',
+        'https://images.pexels.com/photos/4181802/pexels-photo-4181802.jpeg',
+        'https://images.pexels.com/photos/3983293/pexels-photo-3983293.jpeg',
+        'https://images.pexels.com/photos/4398801/pexels-photo-4398801.jpeg',
+        'https://images.pexels.com/photos/5981207/pexels-photo-5981207.jpeg',
+        'https://images.pexels.com/photos/1234567/pexels-photo-1234567.jpeg',
+        'https://images.pexels.com/photos/2345678/pexels-photo-2345678.jpeg',
+        'https://images.pexels.com/photos/3456789/pexels-photo-3456789.jpeg',
+        'https://images.pexels.com/photos/4567890/pexels-photo-4567890.jpeg',
+        'https://images.pexels.com/photos/5678901/pexels-photo-5678901.jpeg',
+        'https://images.pexels.com/photos/6789012/pexels-photo-6789012.jpeg',
+        'https://images.pexels.com/photos/7890123/pexels-photo-7890123.jpeg',
+        'https://images.pexels.com/photos/8901234/pexels-photo-8901234.jpeg',
+        'https://images.pexels.com/photos/9012345/pexels-photo-9012345.jpeg',
+        'https://images.pexels.com/photos/9123456/pexels-photo-9123456.jpeg',
+        'https://images.pexels.com/photos/12345678/pexels-photo-12345678.jpeg',
+        'https://images.pexels.com/photos/23456789/pexels-photo-23456789.jpeg',
+        'https://images.pexels.com/photos/34567890/pexels-photo-34567890.jpeg',
+        'https://images.pexels.com/photos/45678901/pexels-photo-45678901.jpeg',
+        'https://images.pexels.com/photos/56789012/pexels-photo-56789012.jpeg',
+    ];
+
+    const topNavigator = document.getElementById('top-navigator');
+    const toolsContainer = document.getElementById('tools');
+    const navigator = document.getElementById('navigator');
+    const imageTable = document.getElementById('image-table');
+
+
+    // Populate the top navigator with tools or buttons
+    // topNavigator.innerHTML = '<h2>Image Tools</h2>'; // Assign new H2
+    // Add more tools or buttons as needed
+
+    // Populate the tools container with additional tools
+    // toolsContainer.innerHTML = '<button onclick="customFunction()">Tool 1</button>';
+    // Add more tools or buttons with corresponding functions as needed
+
+    // Populate the navigator with thumbnail images
+    images.forEach((imageUrl, index) => {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = imageUrl;
+        thumbnail.addEventListener('click', () => showImage(index));
+        navigator.appendChild(thumbnail);
+    });
+
+    // Show the first image on page load
+    showImage(0);
+
+    function showImage(index) {
+        // Remove the 'active' class from all thumbnails
+        Array.from(navigator.children).forEach((child) => {
+            child.classList.remove('active');
+        });
+
+        // Add the 'active' class to the clicked thumbnail
+        navigator.children[index].classList.add('active');
+
+        // Clear existing content in the image table
+        imageTable.innerHTML = '';
+
+        // Display the selected image and the three following images in the table viewer
+        for (let i = 0; i < 4; i++) {
+            const imgIndex = (index + i) % images.length;
+
+            // Create a new .image-cell element
+            const imageCell = document.createElement('div');
+            imageCell.classList.add('image-cell');
+
+            // Create an img element and set its attributes
+            const imgElement = document.createElement('img');
+            imgElement.src = images[imgIndex];
+            imgElement.alt = `Image ${imgIndex + 1}`;
+
+            // Append the img element to the .image-cell element
+            imageCell.appendChild(imgElement);
+
+            // Append the .image-cell element to the image table
+            imageTable.appendChild(imageCell);
+        }
+    }
+
+    // Example function for a custom tool button
+    // function customFunction() {
+    //     // Implement the functionality for the custom tool button
+    // }
+</script>
+
+</html>
+
